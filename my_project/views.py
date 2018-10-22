@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 def home(request):
     if request.user in User.objects.all():
         user = request.user
+        usr_name = " ".join([user.first_name, user.last_name])
         token = user.social_auth.first().extra_data['access_token']
         uid = user.social_auth.first().uid
 
@@ -17,7 +18,7 @@ def home(request):
             name = vkapi.users.get(user_id=friend_id, v=2)
             name = " ".join([name[0]['first_name'], name[0]['last_name']])
             friends.append(name)
-        context = {'friends': friends}
+        context = {'friends': friends, 'name': usr_name}
     else:
         context = {}
     return render(request, 'home.html', context)
